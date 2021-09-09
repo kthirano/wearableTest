@@ -1,11 +1,14 @@
 package com.example.wearabletest.Activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.wearable.activity.WearableActivity;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wearabletest.R;
+import com.example.wearabletest.Services.BackgroundAudioListener;
 import com.example.wearabletest.Util.AmpCalc;
 import com.example.wearabletest.Util.FileUtil;
 import com.example.wearabletest.Util.mRecorder;
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     AmpCalc.setDbCount(20 * (float)(Math.log10(volume)));
                     int db = (int) AmpCalc.dbCount;
                     mDbProgress.setProgress(db);
+                    mDbProgress.setProgressTintList(ColorStateList.valueOf(getLevelColorCode(db)));
                     mDbText.setText(Integer.toString(db));
                 }
 
@@ -75,6 +80,19 @@ public class MainActivity extends AppCompatActivity {
         else {
             requestPermissions(filePermission, REQUEST_EXTERNAL_FILE);
         }
+
+        Intent intent = new Intent(this, BackgroundAudioListener.class);
+        stopService(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myRecorder.delete();
+        handler.removeMessages(MSGWHAT);
+        Log.d(BackgroundAudioListener.ONGOING_CHANNEL_ID, "in onPause");
+        Intent intent = new Intent(this, BackgroundAudioListener.class);
+        startService(intent);
     }
 
     @Override
@@ -118,4 +136,16 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(audioPermission, REQUEST_AUDIO_REC);
         }
     }
+
+    private int getLevelColorCode(int db) {
+        String colorStr = "#ff114f";
+        if (db < 70) {
+            colorStr = "#04de71";
+        }
+        else if (db < 80) {
+            colorStr = "#ffe620";
+        }
+        return Color.parseColor(colorStr);
+    }
+
 }
