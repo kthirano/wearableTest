@@ -10,4 +10,9 @@
     <string name="channel_ongoing_description">Background audio listener ongoing</string>
     <string name="notification_ongoing_title">Background Audio Listener Ongoing</string>
     <string name="notification_ongoing_description">Tap to return to AudioBuddy</string>
+    <string name="channel_name">AudioBuddy Sound Alert</string>
+    <string name="channel_description">Notify when environment sound surpasses threshold</string>
+    <string name="notification_title">Environment sound levels alert</string>
+    <string name="notification_description">Sounds above threshold</string>
+
 </resources>

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mDbText;
     private ProgressBar mDbProgress;
+    private Switch serviceToggle;
     private final String[] filePermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private final String[] audioPermission = {Manifest.permission.RECORD_AUDIO};
     private File audioFile;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDbText = (TextView) findViewById(R.id.text_db);
         mDbProgress = (ProgressBar) findViewById(R.id.progressBar);
+        serviceToggle = (Switch) findViewById(R.id.service_toggle);
         myRecorder = new mRecorder();
         // Enables Always-on
         //setAmbientEnabled();
@@ -91,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
         myRecorder.delete();
         handler.removeMessages(MSGWHAT);
         Log.d(BackgroundAudioListener.ONGOING_CHANNEL_ID, "in onPause");
-        Intent intent = new Intent(this, BackgroundAudioListener.class);
-        startService(intent);
+        if (!serviceToggle.isChecked()){
+            Intent intent = new Intent(this, BackgroundAudioListener.class);
+            startService(intent);
+        }
     }
 
     @Override
