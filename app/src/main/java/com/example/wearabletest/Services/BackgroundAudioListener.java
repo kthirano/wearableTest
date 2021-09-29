@@ -172,6 +172,7 @@ public class BackgroundAudioListener extends Service {
 
     private void processDb(int db) {
         if (db > DB_THRESHOLD){
+            Log.v("ServiceTag", "Sound Threshold passed");
             SoundLevelNotif.issueNotification(this);
         }
     }
